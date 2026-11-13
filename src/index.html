@@ -87,6 +87,7 @@
             snake.unshift(head);
             if (isEating)  {
                 addScore();
+                newFood();
             } else {
                 snake.pop();
             }
@@ -106,6 +107,13 @@
         const addScore = () => {
             score++;
             document.getElementById("score").textContent = score;
+        }
+
+        const newFood = () => {
+            const newX = Math.floor(Math.random() * tileCount);
+            const newY = Math.floor(Math.random() * tileCount);
+            food.x = newX
+            food.y = newY
         }
 
         // Movement controls
