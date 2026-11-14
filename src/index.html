@@ -78,7 +78,7 @@
         //
         // ===================================
 
-        setInterval(() => {
+        const gameLoop = setInterval(() => {
             // Move the snake
             const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
 
@@ -87,6 +87,7 @@
             let selfCollision = checkSelfCollision(snake, head);
 
             if (isOutside || selfCollision) {
+                gameOver()
                 return;
             }
 
@@ -101,6 +102,12 @@
 
             drawGame();
         }, 200);
+
+        const gameOver = () => {
+            document.getElementById("info").textContent = "Game-Over"
+            clearInterval(gameLoop)
+
+        }
 
         const compareXY = (x,y,x2,y2) => {
             if (x === x2 && y === y2)  {
