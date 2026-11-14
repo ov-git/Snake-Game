@@ -84,8 +84,9 @@
 
             let isEating = compareXY(head.x, head.y, food.x, food.y)           
             let isOutside = checkBoundaries(head);
-            
-            if (isOutside) {
+            let selfCollision = checkSelfCollision(snake, head);
+
+            if (isOutside || selfCollision) {
                 return;
             }
 
@@ -124,6 +125,12 @@
         const checkBoundaries = (head) => {
             return (head.x >= tileCount || head.y >= tileCount || head.x < 0 || head.y <0) ? true : false;
 
+        }
+
+        const checkSelfCollision = (list, head) => {
+              return list.some(part => {
+                return part.x === head.x && part.y === head.y
+              });
         }
 
         // Movement controls
