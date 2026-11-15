@@ -50,11 +50,16 @@
             { x: 8, y: 10 }
         ];
         let direction = { x: 1, y: 0 };
-        let nextDirection = { x: 1, y: 0 };// used to prevent rapid turning trgiggering self-collision
+        let nextDirection = { x: 1, y: 0 };// used to prevent rapid turning triggering self-collision
         let food = { x: 15, y: 15 };
         let score = 0;
         let isPaused = false;
         let isPlaying = false;
+
+        let gameLoop;
+        let speed = 500;
+        let highscore = Number(localStorage.getItem("highscore")) || 0;
+        const MINSPEED = 75;
 
         // ===== DRAWING =====
         const drawGame = () => {
@@ -99,10 +104,6 @@
         //
         // ===================================
         
-        let gameLoop;
-        let speed = 500;
-        let highscore = Number(localStorage.getItem("highscore")) || 0;
-        const MINSPEED = 75;
 
         const updateGame = () => {
             // Move the snake
