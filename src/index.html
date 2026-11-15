@@ -10,22 +10,23 @@
             border: 1px solid black;
         }
     </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <h1>Snake</h1>
+ <div id="container">
     <div id="scoreboard">
-        <p id="highscore">High Score: <span id="highscore-value">0</span></p>
-        <P>Score: <span id="score">0</span></P>
+        <p class="score" id="highscore">High Score: <span id="highscore-value">0</span></p>
+        <P class="score" id="score">Score: <span id="score-value">0</span></P>
     </div>
     
     <canvas id="gameCanvas" width="400"
             height="400"></canvas>
     
     <div id="game-info">
-        <p id="info"></p>
+        <p id="info">Press P to pause</p>
         <button id="restart" style="display: block;">Start</button>
     </div>
+ </div>
 
     <script>
         // ===== GAME SETUP =====
@@ -57,7 +58,7 @@
                 gridSize, gridSize
             );
 
-            ctx.fillStyle = "black";
+            ctx.fillStyle = "green";
             for (const segment of snake) {
                 ctx.fillRect(
                     segment.x * gridSize,
@@ -132,7 +133,7 @@
             document.getElementById("highscore-value").textContent = highscore;
             document.getElementById("restart").style.display = "none";
             document.getElementById("info").textContent = "";
-            document.getElementById("score").textContent = score;
+            document.getElementById("score-value").textContent = score;
         }
 
         const gameOver = () => {           
@@ -171,7 +172,7 @@
 
         const addScore = () => {
             score++;
-            document.getElementById("score").textContent = score;
+            document.getElementById("score-value").textContent = score;
         }
 
         const newFood = () => {
