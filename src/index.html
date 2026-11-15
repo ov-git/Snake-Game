@@ -21,7 +21,11 @@
     
     <canvas id="gameCanvas" width="400"
             height="400"></canvas>
-    <p id="info"></p>
+    
+    <div id="game-info">
+        <p id="info"></p>
+        <button id="restart" style="display: block;">Start</button>
+    </div>
 
     <script>
         // ===== GAME SETUP =====
@@ -81,6 +85,7 @@
         //
         // ===================================
         
+        let gameLoop;
         let speed = 500;
         let highscore = Number(localStorage.getItem("highscore")) || 0;
         const MINSPEED = 75;
@@ -113,11 +118,22 @@
         }
 
         const startGame = () => {
+            snake = [
+            { x: 10, y: 10 },
+            { x: 9, y: 10 },
+            { x: 8, y: 10 }
+        ];
+            direction = { x: 1, y: 0 };
+            food = { x: 15, y: 15 };
+            score = 0;
+            speed = 500;
+
             gameLoop = setInterval(updateGame, speed);
             document.getElementById("highscore-value").textContent = highscore;
+            document.getElementById("restart").style.display = "none";
+            document.getElementById("info").textContent = "";
+            document.getElementById("score").textContent = score;
         }
-
-        startGame();
 
         const gameOver = () => {           
             document.getElementById("info").textContent = "Game-Over"
@@ -129,6 +145,7 @@
                 document.getElementById("highscore-value").textContent = score;
                 highscore = score;
             }
+            document.getElementById("restart").style.display = "block";
         }
 
         
@@ -201,6 +218,8 @@
                     break;
             }            
         })
+
+        document.getElementById("restart").addEventListener("click", startGame);
 
     </script>
 
