@@ -19,12 +19,19 @@
         <P class="score" id="score">Score: <span id="score-value">0</span></P>
     </div>
     
-    <canvas id="gameCanvas" width="400"
-            height="400"></canvas>
+    <div id="canvas-container">
+        <div id="info-container">
+            <p id="info-message">START GAME</p>
+            <p id="info-text">Press to start</p>
+            <button id="restart" style="display: block;">Start</button>
+
+        </div>
+        <canvas id="gameCanvas" width="400"
+        height="400"></canvas>
+    </div>
     
     <div id="game-info">
-        <p id="info">Press P to pause</p>
-        <button id="restart" style="display: block;">Start</button>
+        <p id="info"></p>
     </div>
  </div>
 
@@ -45,6 +52,7 @@
         let direction = { x: 1, y: 0 };
         let food = { x: 15, y: 15 };
         let score = 0;
+        let isPaused = false;
 
         // ===== DRAWING =====
         const drawGame = () => {
@@ -68,7 +76,7 @@
             }
         };
 
-        drawGame();
+
 
         // ===================================
         // BUILD THE GAME FROM HERE
@@ -119,6 +127,8 @@
         }
 
         const startGame = () => {
+            isPaused = false;
+            drawGame();
             snake = [
             { x: 10, y: 10 },
             { x: 9, y: 10 },
@@ -132,21 +142,41 @@
             gameLoop = setInterval(updateGame, speed);
             document.getElementById("highscore-value").textContent = highscore;
             document.getElementById("restart").style.display = "none";
-            document.getElementById("info").textContent = "";
+            document.getElementById("info-message").textContent = "";
+            document.getElementById("info-text").textContent = "";
             document.getElementById("score-value").textContent = score;
+            document.getElementById("info").textContent = "Press P to pause";
+            document.getElementById("info-message").classList.remove("game-over");   
         }
 
-        const gameOver = () => {           
-            document.getElementById("info").textContent = "Game-Over"
+        const gameOver = () => {  
+            document.getElementById("info-message").classList.add("game-over");   
+            document.getElementById("info-message").textContent = "Game-Over"
             clearInterval(gameLoop)
 
             if (score > highscore) {
                 localStorage.setItem("highscore", score.toString());
-                document.getElementById("info").textContent = "Game Over - New Highscore: " + score;
+                document.getElementById("info-text").textContent = "New Highscore: " + score;
                 document.getElementById("highscore-value").textContent = score;
                 highscore = score;
             }
             document.getElementById("restart").style.display = "block";
+            document.getElementById("info").textContent = "";
+        }
+
+        const togglePause = () => {
+            if (isPaused) {
+                gameLoop = setInterval(updateGame, speed);
+                document.getElementById("info-message").textContent = "";
+                document.getElementById("info-text").textContent = "";
+                document.getElementById("info").textContent = "Press P to pause";
+            } else {
+                clearInterval(gameLoop);
+                document.getElementById("info-message").textContent = "Paused - Press P to resume";
+                document.getElementById("info-text").textContent = "Press P to resume";
+                document.getElementById("info").textContent = "";
+            }
+            isPaused = !isPaused;
         }
 
         
@@ -216,6 +246,9 @@
                 case "ArrowRight":
                     if (direction.x === -1) break; // Prevent reversing direction
                     direction = { x: 1, y: 0 };
+                    break;
+                case "p":
+                    togglePause();
                     break;
             }            
         })
