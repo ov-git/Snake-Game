@@ -50,6 +50,7 @@
             { x: 8, y: 10 }
         ];
         let direction = { x: 1, y: 0 };
+        let nextDirection = { x: 1, y: 0 };// used to prevent rapid turning trgiggering self-collision
         let food = { x: 15, y: 15 };
         let score = 0;
         let isPaused = false;
@@ -105,6 +106,7 @@
 
         const updateGame = () => {
             // Move the snake
+            direction = nextDirection; // Update direction at the start of the game loop
             const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
             
             let isEating = compareXY(head.x, head.y, food.x, food.y)           
@@ -138,6 +140,7 @@
             { x: 8, y: 10 }
         ];
             direction = { x: 1, y: 0 };
+            nextDirection = { x: 1, y: 0 };
             food = { x: 15, y: 15 };
             score = 0;
             speed = 500;
@@ -226,10 +229,14 @@
         }
 
         const newFood = () => {
-            const newX = Math.floor(Math.random() * tileCount);
-            const newY = Math.floor(Math.random() * tileCount);
-            food.x = newX
-            food.y = newY
+            let newX;
+            let newY;
+            do {
+                newX = Math.floor(Math.random() * tileCount);
+                newY = Math.floor(Math.random() * tileCount);
+            } while (snake.some(part => part.x === newX && part.y === newY));
+            food.x = newX;
+            food.y = newY;
         }
 
         const checkBoundaries = (head) => {
@@ -249,24 +256,24 @@
             switch (e.key) {          
                 case "w":
                 case "ArrowUp":
-                    if (direction.y === 1) break; // Prevent reversing direction
-                    direction = { x: 0, y: -1 };
-                    break;
+                    if (direction.y === 1 || direction.y === -1) break; // Prevent reversing direction
+                        nextDirection = { x: 0, y: -1 };
+                        break;
                 case "s":
                 case "ArrowDown":
-                    if (direction.y === -1) break; // Prevent reversing direction
-                        direction = { x: 0, y: 1 };
+                    if (direction.y === -1 || direction.y === 1) break; // Prevent reversing direction
+                        nextDirection = { x: 0, y: 1 };
                         break;
                 case "a":
                 case "ArrowLeft":
-                        if (direction.x === 1) break; // Prevent reversing direction
-                        direction = { x: -1, y: 0 };
+                        if (direction.x === 1 || direction.x === -1) break; // Prevent reversing direction
+                        nextDirection = { x: -1, y: 0 };
                         break;
                 case "d":
                 case "ArrowRight":
-                    if (direction.x === -1) break; // Prevent reversing direction
-                    direction = { x: 1, y: 0 };
-                    break;
+                    if (direction.x === -1 || direction.x === 1) break; // Prevent reversing direction
+                        nextDirection = { x: 1, y: 0 };
+                        break;
                 case "p":
                     if(isPlaying)  {
                         togglePause();
