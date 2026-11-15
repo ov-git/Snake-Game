@@ -77,11 +77,15 @@
         // Step 5: Improvements
         //
         // ===================================
+        
+        let speed = 500;
+        const MINSPEED = 75;
 
-        const gameLoop = setInterval(() => {
+        
+        const updateGame = () => {
             // Move the snake
             const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
-
+            
             let isEating = compareXY(head.x, head.y, food.x, food.y)           
             let isOutside = checkBoundaries(head);
             let selfCollision = checkSelfCollision(snake, head);
@@ -94,14 +98,26 @@
             snake.unshift(head);
             if (isEating)  {
                 addScore();
+                increaseSpeed();
                 newFood();
             } else {
                 snake.pop();
             }
-
-
             drawGame();
-        }, 200);
+        }
+
+        let gameLoop = setInterval(updateGame, speed);
+        
+        const increaseSpeed = () => {
+            if (speed > MINSPEED) {
+                speed -= 25;
+            } else {
+                speed =MINSPEED;
+            }
+            clearInterval(gameLoop);
+            gameLoop = setInterval(updateGame, speed);
+        }
+           
 
         const gameOver = () => {
             document.getElementById("info").textContent = "Game-Over"
@@ -146,18 +162,22 @@
             switch (e.key) {          
                 case "w":
                 case "ArrowUp":
+                    if (direction.y === 1) break; // Prevent reversing direction
                     direction = { x: 0, y: -1 };
                     break;
                 case "s":
                 case "ArrowDown":
+                    if (direction.y === -1) break; // Prevent reversing direction
                         direction = { x: 0, y: 1 };
                         break;
                 case "a":
-                    case "ArrowLeft":
+                case "ArrowLeft":
+                        if (direction.x === 1) break; // Prevent reversing direction
                         direction = { x: -1, y: 0 };
                         break;
                 case "d":
                 case "ArrowRight":
+                    if (direction.x === -1) break; // Prevent reversing direction
                     direction = { x: 1, y: 0 };
                     break;
             }            
