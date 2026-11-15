@@ -53,6 +53,7 @@
         let food = { x: 15, y: 15 };
         let score = 0;
         let isPaused = false;
+        let isPlaying = false;
 
         // ===== DRAWING =====
         const drawGame = () => {
@@ -112,6 +113,7 @@
 
             if (isOutside || selfCollision) {
                 gameOver()
+                isPlaying = false;
                 return;
             }
 
@@ -127,7 +129,6 @@
         }
 
         const startGame = () => {
-
             let startTimer = 3;
             isPaused = false;
             
@@ -152,10 +153,13 @@
             clearCanvas();
 
             document.getElementById("info-message").textContent = startTimer.toString();
+            document.getElementById("info-message").classList.add("countdown");
             const startInterval = setInterval(() => {
                 startTimer--;
                 document.getElementById("info-message").textContent = startTimer.toString();
                 if (startTimer <= 0) {
+                    isPlaying = true;
+                    document.getElementById("info-message").classList.remove("countdown");
                     document.getElementById("info-message").textContent = "";
                     clearInterval(startInterval);
                     gameLoop = setInterval(updateGame, speed);
@@ -165,6 +169,7 @@
         }
 
         const gameOver = () => {  
+            isPlaying = false;
             document.getElementById("info-message").classList.add("game-over");   
             document.getElementById("info-message").textContent = "Game-Over"
             clearInterval(gameLoop)
@@ -187,7 +192,7 @@
                 document.getElementById("info").textContent = "Press P to pause";
             } else {
                 clearInterval(gameLoop);
-                document.getElementById("info-message").textContent = "Paused - Press P to resume";
+                document.getElementById("info-message").textContent = "Paused";
                 document.getElementById("info-text").textContent = "Press P to resume";
                 document.getElementById("info").textContent = "";
             }
@@ -263,7 +268,9 @@
                     direction = { x: 1, y: 0 };
                     break;
                 case "p":
-                    togglePause();
+                    if(isPlaying)  {
+                        togglePause();
+                    }
                     break;
             }            
         })
